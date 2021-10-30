@@ -6,5 +6,8 @@ export default function fetchCountries(e) {
   const url = `https://restcountries.com/v2/name/${searchCountry}`;
   return fetch(url)
     .then(response => response.json())
-    .then(data => data);
+    .then(data => data).catch(error => {
+      console.log(error)
+     });
+    
 }

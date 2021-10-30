@@ -16,6 +16,7 @@ const inputNotice = new PNotify.Stack({
 });
 
 inputSpace.addEventListener('input', _.debounce(onInput, 500));
+
 function onInput(e) {
   e.preventDefault();
   fetchCountries(e).then(data => {
@@ -23,17 +24,33 @@ function onInput(e) {
     inputNotice.close(true);
     if (data.length === 1) {
       container.insertAdjacentHTML('beforeend', countryCard(data[0]));
-    } else if (data.length < 11 && data.length > 2) {
+    } 
+    else if (data.length < 11 && data.length > 2) {
       data.forEach(country => {
         console.log(country.name);
       });
       container.insertAdjacentHTML('beforeend', countryList(data));
-    } else {
+    } 
+   
+    else if (data.length > 10){
       PNotify.notice({
         text: 'Unfortunately too many matches have been found. Please try again',
         stack: inputNotice,
         modules: new Map([...PNotify.defaultModules, [PNotifyMobile, {}]]),
-      });
+      })
+    } 
+ else {
+      onTheError(info, 'No matches found!');
+     
     }
-  });
+  }).catch(onTheError);
+
+}
+function onTheError(typeInfo, text){
+  container.innerHTML = ''
+  PNotify.notice({
+    text: 'No matches found!',
+    delay: 1000,
+    color: 'red',
+  })
 }
